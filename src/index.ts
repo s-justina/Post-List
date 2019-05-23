@@ -1,16 +1,24 @@
 import {Component} from './modules/component'
+import {type} from "os";
 
 window.onload = () => {
 
-    let mainView: Component;
+    type postsData = {
+        posts: object[]
+    };
+
+    let postList: Component;
+    let sortButtons: Component;
+    let postsData: postsData;
 
     function loadDoc() {
         const xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
-                const data = showData(this.responseText);
-                startApp(data)
+                postsData = showData(this.responseText);
+                startApp(postsData);
+
             }
         };
 
@@ -46,8 +54,8 @@ window.onload = () => {
     //3) napisać funkcję, która zwróci tytuł postu z najwyższym stosunkiem głosów dodatnich
     // i ujemnych (w przypadku kilku postów o jednakowych współczynnikach, wybrać najnowszy z nich)
 
-    const returnBestPost = (data) => {
-        return data.posts.reduce((prevPost, currPost) => {
+    const returnBestPost = (posts) => {
+        return posts.reduce((prevPost, currPost) => {
 
             if (prevPost.score !== currPost.score) {
                 return (prevPost.score > currPost.score) ? prevPost : currPost
@@ -65,37 +73,87 @@ window.onload = () => {
     });
 
     const renderPosts = (posts): string => {
-        return posts.map(post => {
+        const postsToRender = posts.map(post => {
            return (
-               '<li>' +`<p>${post.title}</p>` + '</li>'
+               '<li>' +
+                    `<p>Title: ${post.title}</p>` +
+                    '<div>' +
+                        `<p class="score">Upvotes: ${post.upvotes}</p>` +
+                        `<p class="score">Downvotes: ${post.downvotes}</p>` +
+                    '</div>' +
+               '</li>'
            )
         }).reduce((prev,curr) => prev + curr);
+
+        return (
+            '<ul>' + (postsToRender) + '</ul>'
+        )
     };
 
+
     const startApp = (data) => {
+
+
         const sortedArray = data.posts.sort(sortByParam('num_comments'));
 
-        const bestPost = returnBestPost(data);
+        const bestPost = returnBestPost(data.posts);
 
         const latestPosts = returnPostsFromLast24h(data);
 
-        mainView = new Component('#app', {
-            props: data,
-            template: (data) => {
+        postList = new Component('#postList', {
+            props: data.posts,
+            template: () => {
                 return (
                     '<div class="post-list">' +
-                        '<ul>'+
-                          (renderPosts(data.posts))+
-                        '</ul>'+
+                          (renderPosts(postList.props))+
                     '</div>'
                 )
             }
         });
 
-        mainView.render();
+        sortButtons = new Component('#sort-dropdown', {
+            props: data,
+            template: () => {
+                    return (
+                        '<button sort-btn="showBestPost">' + 'Show best post' + '</button>'+
+                        '<button sort-btn="showAllPosts">' + 'Show all posts' + '</button>'+
+                        '<button sort-btn="something">' + 'BTN NOT RDY' + '</button>'
+                    )
+                }
+            });
+
+
+        console.log(sortButtons);
+
+        sortButtons.render();
+        postList.render();
     };
 
+    const clickHandler = function (event): void {
+        // Check if a reflex action button was clicked
+        const action = event.target.getAttribute('sort-btn');
+
+        if (!action) return;
+
+
+        if(action === 'showBestPost'){
+            console.log('klikk')
+            const bestPost = returnBestPost(postList.props)
+            postList.setProps([bestPost]);
+
+            postList.render();
+        } else if(action === 'showAllPosts'){
+            console.log(postsData.posts)
+            postList.setProps(postsData.posts)
+            postList.render();
+        } else if (action === 'sortPosts'){
+            // const sortedPosts = postList.props.sort(sortByParam())
+        }
+    };
+
+
     loadDoc();
+    document.addEventListener('click', clickHandler, false)
 };
 
 

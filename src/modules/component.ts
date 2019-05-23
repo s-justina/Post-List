@@ -1,19 +1,25 @@
 interface ComponentData {
-    props: any
+    props?: any
     template: (props: any) => string | string;
+    onClick?: () => void
+    index?: number
 }
 
 
 export class Component {
     elem: string | HTMLElement;
     template: (props: any) => string | string;
-    props: any;
+    props?: any;
+    onClick: () => void;
+    index?: number
 
-    constructor(elem, {props, template}: ComponentData){
+    constructor(elem, {props, template, onClick, index}: ComponentData){
         if (!elem) throw 'You did not provide an element to make into a component.';
         this.elem = elem;
         this.props = props;
-        this.template = template
+        this.template = template;
+        this.onClick = onClick;
+        this.index = index
     }
 
     // Sanitization for safety reasons
@@ -22,6 +28,7 @@ export class Component {
         temp.textContent = str;
         return temp.innerHTML;
     };
+
 
     // Component's render function
     public render (): object {
@@ -54,4 +61,10 @@ export class Component {
         return elem;
 
     }
+
+    public setProps(props: any){
+        this.props = props;
+    }
 }
+
+

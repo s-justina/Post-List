@@ -6,7 +6,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container" id="app">Loading..</div>
+<div class="container">
+    <header class="header">HEADER</header>
+    <div class="app-body">
+        <div class="sidebar">
+            SIDEBAR
+            <div class="dropdown">
+                <button class="dropbtn">
+                    Sort posts
+                </button>
+                <div class="dropdown-content" id="sort-dropdown">
+
+                </div>
+            </div>
+        </div>
+        <div class="post-list-container">
+            <h3>POST LIST</h3>
+            <div class="search-bar"></div>
+            <div class="post-list" id="postList">Loading..</div>
+        </div>
+    </div>
+</div>
+
 <script src="bundle.js"></script>
 </body>
 </html>

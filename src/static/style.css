@@ -1,0 +1,30 @@
+.container {
+    margin: 20px;
+}
+
+header {
+    margin: 0 50%;
+}
+
+h3 {
+    padding-left: 40px;
+}
+
+.app-body {
+    display: grid;
+    grid-template-columns: 100px auto;
+}
+
+.post-list ul li {
+    border: 3px solid black;
+    list-style: none;
+}
+
+li p {
+    margin: 5px;
+}
+
+.score {
+    display: inline-block;
+    margin: 5px;
+}
