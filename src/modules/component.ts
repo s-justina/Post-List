@@ -2,7 +2,6 @@ interface ComponentData {
     props?: any
     template: (props: any) => string | string;
     onClick?: () => void
-    index?: number
 }
 
 
@@ -11,15 +10,13 @@ export class Component {
     template: (props: any) => string | string;
     props?: any;
     onClick: () => void;
-    index?: number
 
-    constructor(elem, {props, template, onClick, index}: ComponentData){
+    constructor(elem, {props, template, onClick}: ComponentData){
         if (!elem) throw 'You did not provide an element to make into a component.';
         this.elem = elem;
         this.props = props;
         this.template = template;
         this.onClick = onClick;
-        this.index = index
     }
 
     // Sanitization for safety reasons

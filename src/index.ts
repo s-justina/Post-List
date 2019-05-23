@@ -8,8 +8,9 @@ window.onload = () => {
     };
 
     let postList: Component;
-    let sortButtons: Component;
+    let sortButton: Component;
     let postsData: postsData;
+    let renderSelectedPostsBtns: Component;
 
     function loadDoc() {
         const xhttp = new XMLHttpRequest();
@@ -94,11 +95,12 @@ window.onload = () => {
     const startApp = (data) => {
 
 
-        const sortedArray = data.posts.sort(sortByParam('num_comments'));
-
-        const bestPost = returnBestPost(data.posts);
-
-        const latestPosts = returnPostsFromLast24h(data);
+        // const sortedArray = data.posts.sort(sortByParam('upvotes'));
+        // console.log(sortedArray);
+        //
+        // const bestPost = returnBestPost(data.posts);
+        //
+        // const latestPosts = returnPostsFromLast24h(data);
 
         postList = new Component('#postList', {
             props: data.posts,
@@ -111,30 +113,54 @@ window.onload = () => {
             }
         });
 
-        sortButtons = new Component('#sort-dropdown', {
+        renderSelectedPostsBtns = new Component('#sort-dropdown', {
             props: data,
             template: () => {
                     return (
-                        '<button sort-btn="showBestPost">' + 'Show best post' + '</button>'+
-                        '<button sort-btn="showAllPosts">' + 'Show all posts' + '</button>'+
-                        '<button sort-btn="something">' + 'BTN NOT RDY' + '</button>'
+                        '<button show-btn="showBestPost">' + 'Show best post' + '</button>'+
+                        '<button show-btn="showAllPosts">' + 'Show all posts' + '</button>'
                     )
                 }
             });
 
+        sortButton = new Component('#sort-btn', {
+            template: () => {
+                return (
+                    '<button sort-btn="sortPosts">' + 'Sort posts with selected option' + '</button>'
+                )
+            }
+        });
 
-        console.log(sortButtons);
 
-        sortButtons.render();
+        console.log(sortButton);
+
+        renderSelectedPostsBtns.render();
+        sortButton.render();
         postList.render();
     };
 
     const clickHandler = function (event): void {
-        // Check if a reflex action button was clicked
-        const action = event.target.getAttribute('sort-btn');
+        // Check if a button was clicked
+        const action = event.target.getAttribute('show-btn');
+        const sortAction = event.target.getAttribute('sort-btn');
 
-        if (!action) return;
+        if (!sortAction) return;
 
+        if(sortAction === 'sortPosts'){
+            const optionSelected = [0,1,2,3].map( i => {
+                return document.getElementById(`checked${i}`)
+            }).filter((input) => (input as any).checked );
+
+            const sortedPosts = postList.props.sort(sortByParam('upvotes'));
+            console.log(sortedPosts);
+
+            postList.setProps(sortedPosts);
+            console.log(postList.props);
+            postList.render();
+        }
+
+
+        // console.log(action);
 
         if(action === 'showBestPost'){
             console.log('klikk')
@@ -146,8 +172,6 @@ window.onload = () => {
             console.log(postsData.posts)
             postList.setProps(postsData.posts)
             postList.render();
-        } else if (action === 'sortPosts'){
-            // const sortedPosts = postList.props.sort(sortByParam())
         }
     };
 

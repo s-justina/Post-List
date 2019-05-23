@@ -12,9 +12,7 @@
         <div class="sidebar">
             SIDEBAR
             <div class="dropdown">
-                <button class="dropbtn">
-                    Sort posts
-                </button>
+
                 <div class="dropdown-content" id="sort-dropdown">
 
                 </div>
@@ -22,6 +20,22 @@
         </div>
         <div class="post-list-container">
             <h3>POST LIST</h3>
+            <p>Sort posts by:</p>
+            <label>
+                <input id="checked0" type="radio" name="sortPosts" value="upvotes"> Upvotes
+            </label>
+            <label>
+                <input id="checked1" type="radio" name="sortPosts" value="num_comments"> Number of comments
+            </label>
+            <label>
+                <input id="checked2" type="radio" name="sortPosts" value="score"> Score
+            </label>
+            <label>
+                <input id="checked3" type="radio" name="sortPosts" value="created"> Created
+            </label>
+            <div id="sort-btn">
+
+            </div>
             <div class="search-bar"></div>
             <div class="post-list" id="postList">Loading..</div>
         </div>
