@@ -50,6 +50,7 @@ window.onload = () => {
     //2) napisać funkcję, która umożliwi sortowanie po "upvotes", "downvotes",
     // "score" lub dacie "created" w zależności od przekazanego parametru
     const sortByParam = (param) => (prevPost, post) => {
+        console.log(param, 'param');
         return post[`${param}`] - prevPost[`${param}`]
     };
     //3) napisać funkcję, która zwróci tytuł postu z najwyższym stosunkiem głosów dodatnich
@@ -68,7 +69,7 @@ window.onload = () => {
 
     //4) napisać funkcję, która wyświetli posty tylko z ostatniego dnia (24h wstecz)
 
-    const returnPostsFromLast24h = (data) => data.posts.filter(post => {
+    const returnPostsFromLast24h = (posts) => posts.filter(post => {
         const time24HAgo = Date.now() - (24 * 60 * 60 * 1000);
         return post.created > Math.round(time24HAgo / 1000)
     });
@@ -94,14 +95,6 @@ window.onload = () => {
 
     const startApp = (data) => {
 
-
-        // const sortedArray = data.posts.sort(sortByParam('upvotes'));
-        // console.log(sortedArray);
-        //
-        // const bestPost = returnBestPost(data.posts);
-        //
-        // const latestPosts = returnPostsFromLast24h(data);
-
         postList = new Component('#postList', {
             props: data.posts,
             template: () => {
@@ -113,56 +106,51 @@ window.onload = () => {
             }
         });
 
-        renderSelectedPostsBtns = new Component('#sort-dropdown', {
-            props: data,
-            template: () => {
-                    return (
-                        '<button show-btn="showBestPost">' + 'Show best post' + '</button>'+
-                        '<button show-btn="showAllPosts">' + 'Show all posts' + '</button>'
-                    )
-                }
-            });
 
-        sortButton = new Component('#sort-btn', {
-            template: () => {
-                return (
-                    '<button sort-btn="sortPosts">' + 'Sort posts with selected option' + '</button>'
-                )
-            }
-        });
-
-
-        console.log(sortButton);
-
-        renderSelectedPostsBtns.render();
-        sortButton.render();
         postList.render();
     };
+
+    renderSelectedPostsBtns = new Component('#sort-dropdown', {
+        template: () => {
+            return (
+                '<button show-btn="showBestPost">' + 'Show best post' + '</button>'+
+                '<button show-btn="showAllPosts">' + 'Show all posts' + '</button>' +
+                '<button show-btn="unsortPosts">' + 'Revert sorting' + '</button>'+
+                '<button show-btn="showLatestPosts">' + 'Show posts from last 24h' + '</button>'
+            )
+        }
+    });
+
+    sortButton = new Component('#sort-btn', {
+        template: () => {
+            return (
+                '<button sort-btn="sortPosts">' + 'Sort posts with selected option' + '</button>'
+            )
+        }
+    });
+
+    renderSelectedPostsBtns.render();
+    sortButton.render();
 
     const clickHandler = function (event): void {
         // Check if a button was clicked
         const action = event.target.getAttribute('show-btn');
         const sortAction = event.target.getAttribute('sort-btn');
+        console.log(action, sortAction);
 
-        if (!sortAction) return;
 
         if(sortAction === 'sortPosts'){
             const optionSelected = [0,1,2,3].map( i => {
                 return document.getElementById(`checked${i}`)
-            }).filter((input) => (input as any).checked );
+            }).filter((input) => (input as any).checked)[0];
 
-            const sortedPosts = postList.props.sort(sortByParam('upvotes'));
-            console.log(sortedPosts);
+            const sortedPosts = postList.props.sort(sortByParam((optionSelected as HTMLInputElement).value));
+            console.log(sortedPosts, 'sorted posts');
 
             postList.setProps(sortedPosts);
             console.log(postList.props);
             postList.render();
-        }
-
-
-        // console.log(action);
-
-        if(action === 'showBestPost'){
+        } else if(action === 'showBestPost'){
             console.log('klikk')
             const bestPost = returnBestPost(postList.props)
             postList.setProps([bestPost]);
@@ -172,7 +160,12 @@ window.onload = () => {
             console.log(postsData.posts)
             postList.setProps(postsData.posts)
             postList.render();
-        }
+        } else if(action === 'unsortPosts') {
+            loadDoc();
+        } else if (action === 'showLatestPosts') {
+            postList.setProps(returnPostsFromLast24h(postList.props))
+            postList.render();
+        } else return;
     };
 
 
