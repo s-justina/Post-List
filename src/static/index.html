@@ -1,47 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>POSTS OVERVIEW</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="container">
-    <header class="header">HEADER</header>
-    <div class="app-body">
-        <div class="sidebar">
-            SIDEBAR
-            <div class="dropdown">
 
-                <div class="dropdown-content" id="sort-dropdown">
+<body>
+    <div class="container">
+        <header class="header">
+            <p>r/funny</p>
+        </header>
+        <div class="app-body">
+            <div class="sidebar">
+                <p class="title">SIDEBAR</p>
+                <div class="dropdown">
+
+                    <div class="dropdown-content" id="sort-dropdown">
+
+                    </div>
+                </div>
+                <div class='arrow'><a href="#"><i class="fas fa-arrow-circle-up"></i></a></div>
+            </div>
+            <div class="post-list-container">
+                <h3>Posts:</h3>
+                <p class="list">Sort posts by:</p>
+                <form>
+                    <div class="radiobtnlist">
+                        <div class="radiobtn">
+                            <input id="checked0" type="radio" name="sortPosts" value="upvotes" checked>
+                            <label for="checked0">
+                                Upvotes
+                            </label>
+                        </div>
+                        <div class="radiobtn">
+                            <input id="checked1" type="radio" name="sortPosts" value="num_comments">
+                            <label for="checked1">
+                                Total comments
+                            </label>
+                        </div>
+                        <div class="radiobtn">
+                            <input id="checked2" type="radio" name="sortPosts" value="score">
+                            <label for="checked2">
+                                Score
+                            </label>
+                        </div>
+                        <div class="radiobtn">
+                            <input id="checked3" type="radio" name="sortPosts" value="created">
+                            <label for="checked3">
+                                Created
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                <div id="sort-btn">
 
                 </div>
+                <div class="search-bar"></div>
+                <div class="post-list" id="postList">Loading..</div>
             </div>
-        </div>
-        <div class="post-list-container">
-            <h3>POST LIST</h3>
-            <p>Sort posts by:</p>
-            <label>
-                <input id="checked0" type="radio" name="sortPosts" value="upvotes"> Upvotes
-            </label>
-            <label>
-                <input id="checked1" type="radio" name="sortPosts" value="num_comments"> Number of comments
-            </label>
-            <label>
-                <input id="checked2" type="radio" name="sortPosts" value="score"> Score
-            </label>
-            <label>
-                <input id="checked3" type="radio" name="sortPosts" value="created"> Created
-            </label>
-            <div id="sort-btn">
-
-            </div>
-            <div class="search-bar"></div>
-            <div class="post-list" id="postList">Loading..</div>
         </div>
     </div>
-</div>
 
-<script src="bundle.js"></script>
+    <script src="bundle.js"></script>
 </body>
+
 </html>

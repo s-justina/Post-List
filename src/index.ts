@@ -1,4 +1,4 @@
-import {Component} from './modules/component'
+import { Component } from './modules/component'
 
 window.onload = () => {
 
@@ -75,16 +75,16 @@ window.onload = () => {
 
     const renderPosts = (posts): string => {
         const postsToRender = posts.map(post => {
-           return (
-               '<li>' +
-                    `<p>Title: ${post.title}</p>` +
-                    '<div>' +
-                        `<p class="score">Upvotes: ${post.upvotes}</p>` +
-                        `<p class="score">Downvotes: ${post.downvotes}</p>` +
-                    '</div>' +
-               '</li>'
-           )
-        }).reduce((prev,curr) => prev + curr);
+            return (
+                '<li>' +
+                `<p>Title: ${post.title}</p>` +
+                '<div>' +
+                `<p class="score">Upvotes: ${post.upvotes}</p>` +
+                `<p class="score">Downvotes: ${post.downvotes}</p>` +
+                '</div>' +
+                '</li>'
+            )
+        }).reduce((prev, curr) => prev + curr);
 
         return (
             '<ul>' + (postsToRender) + '</ul>'
@@ -99,7 +99,7 @@ window.onload = () => {
             template: () => {
                 return (
                     '<div class="post-list">' +
-                          (renderPosts(postList.props))+
+                    (renderPosts(postList.props)) +
                     '</div>'
                 )
             }
@@ -112,10 +112,10 @@ window.onload = () => {
     renderSelectedPostsBtns = new Component('#sort-dropdown', {
         template: () => {
             return (
-                '<button show-btn="showBestPost">' + 'Show best post' + '</button>'+
-                '<button show-btn="showAllPosts">' + 'Show all posts' + '</button>' +
-                '<button show-btn="reRenderPosts">' + 'Revert sorting' + '</button>'+
-                '<button show-btn="showLatestPosts">' + 'Show posts from last 24h' + '</button>'
+                '<button show-btn="showBestPost">' + '<i class="fab fa-gripfire"></i>' + '<p>Show best post</p>' + '</button>' +
+                '<button show-btn="showAllPosts">' + '<i class="fas fa-book-open"></i>' + '<p>Show all posts</p>' + '</button>' +
+                '<button show-btn="reRenderPosts">' + '<i class="fas fa-sync-alt"></i>' + '<p>Revert sorting</p>' + '</button>' +
+                '<button show-btn="showLatestPosts">' + '<i class="fas fa-hourglass"></i>' + '<p>Show posts from last 24h</p>' + '</button>'
             )
         }
     });
@@ -136,10 +136,23 @@ window.onload = () => {
         // Check if a button was clicked
         const action = event.target.getAttribute('show-btn');
         const sortAction = event.target.getAttribute('sort-btn');
+        // event.target.classList.add('selectedbtn');
+        const btnArray = document.getElementsByTagName('button');
 
+        const filteredBtnArray = Array.from({ length: btnArray.length }).map((item, index) => {
+            if (btnArray[index].getAttribute('show-btn')) {
+                return btnArray[index]
+            }
+        }).filter(btn => btn !== undefined);
 
-        if(sortAction === 'sortPosts'){
-            const optionSelected = [0,1,2,3].map( i => {
+        filteredBtnArray.forEach(btn => btn.classList.remove('selectedbtn'));
+
+        if (!event.target.classList.contains('selectedbtn') && action) {
+            event.target.classList.add('selectedbtn')
+        }
+
+        if (sortAction === 'sortPosts') {
+            const optionSelected = [0, 1, 2, 3].map(i => {
                 return document.getElementById(`checked${i}`)
             }).filter((input) => (input as any).checked)[0];
 
@@ -147,17 +160,17 @@ window.onload = () => {
 
             postList.setProps(sortedPosts);
             postList.render();
-        } else if(action === 'showBestPost'){
+        } else if (action === 'showBestPost') {
 
             const bestPost = returnBestPost(postList.props)
             postList.setProps([bestPost]);
 
             postList.render();
-        } else if(action === 'showAllPosts'){
+        } else if (action === 'showAllPosts') {
 
             postList.setProps(postsData.posts)
             postList.render();
-        } else if(action === 'reRenderPosts') {
+        } else if (action === 'reRenderPosts') {
             loadDoc();
         } else if (action === 'showLatestPosts') {
             postList.setProps(returnPostsFromLast24h(postList.props))
