@@ -1,5 +1,4 @@
 import {Component} from './modules/component'
-import {type} from "os";
 
 window.onload = () => {
 
@@ -18,7 +17,7 @@ window.onload = () => {
         xhttp.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 postsData = showData(this.responseText);
-                startApp(postsData);
+                renderPostList(postsData);
 
             }
         };
@@ -93,7 +92,7 @@ window.onload = () => {
     };
 
 
-    const startApp = (data) => {
+    const renderPostList = (data) => {
 
         postList = new Component('#postList', {
             props: data.posts,
@@ -115,7 +114,7 @@ window.onload = () => {
             return (
                 '<button show-btn="showBestPost">' + 'Show best post' + '</button>'+
                 '<button show-btn="showAllPosts">' + 'Show all posts' + '</button>' +
-                '<button show-btn="unsortPosts">' + 'Revert sorting' + '</button>'+
+                '<button show-btn="reRenderPosts">' + 'Revert sorting' + '</button>'+
                 '<button show-btn="showLatestPosts">' + 'Show posts from last 24h' + '</button>'
             )
         }
@@ -129,6 +128,7 @@ window.onload = () => {
         }
     });
 
+
     renderSelectedPostsBtns.render();
     sortButton.render();
 
@@ -136,7 +136,6 @@ window.onload = () => {
         // Check if a button was clicked
         const action = event.target.getAttribute('show-btn');
         const sortAction = event.target.getAttribute('sort-btn');
-        console.log(action, sortAction);
 
 
         if(sortAction === 'sortPosts'){
@@ -145,22 +144,20 @@ window.onload = () => {
             }).filter((input) => (input as any).checked)[0];
 
             const sortedPosts = postList.props.sort(sortByParam((optionSelected as HTMLInputElement).value));
-            console.log(sortedPosts, 'sorted posts');
 
             postList.setProps(sortedPosts);
-            console.log(postList.props);
             postList.render();
         } else if(action === 'showBestPost'){
-            console.log('klikk')
+
             const bestPost = returnBestPost(postList.props)
             postList.setProps([bestPost]);
 
             postList.render();
         } else if(action === 'showAllPosts'){
-            console.log(postsData.posts)
+
             postList.setProps(postsData.posts)
             postList.render();
-        } else if(action === 'unsortPosts') {
+        } else if(action === 'reRenderPosts') {
             loadDoc();
         } else if (action === 'showLatestPosts') {
             postList.setProps(returnPostsFromLast24h(postList.props))

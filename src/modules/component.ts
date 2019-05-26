@@ -1,7 +1,6 @@
 interface ComponentData {
     props?: any
     template: (props: any) => string | string;
-    onClick?: () => void
 }
 
 
@@ -9,14 +8,12 @@ export class Component {
     elem: string | HTMLElement;
     template: (props: any) => string | string;
     props?: any;
-    onClick: () => void;
 
-    constructor(elem, {props, template, onClick}: ComponentData){
+    constructor(elem, {props, template}: ComponentData){
         if (!elem) throw 'You did not provide an element to make into a component.';
         this.elem = elem;
         this.props = props;
         this.template = template;
-        this.onClick = onClick;
     }
 
     // Sanitization for safety reasons
@@ -35,6 +32,7 @@ export class Component {
 
         // If elem is an element, use it.
         // If it's a selector, get it.
+        console.log(typeof this.elem);
         const elem = typeof this.elem === 'string' ? document.querySelector(this.elem) : this.elem;
         if (!elem) return;
 
@@ -63,5 +61,9 @@ export class Component {
         this.props = props;
     }
 }
+
+
+
+
 
 
